@@ -1,0 +1,60 @@
+[debug] [2023-10-19T01:00:57.235Z] ----------------------------------------------------------------------
+[debug] [2023-10-19T01:00:57.244Z] Command:       /usr/local/bin/node /usr/local/bin/firebase emulators:start --only database,auth
+[debug] [2023-10-19T01:00:57.245Z] CLI Version:   11.23.1
+[debug] [2023-10-19T01:00:57.245Z] Platform:      darwin
+[debug] [2023-10-19T01:00:57.245Z] Node Version:  v19.3.0
+[debug] [2023-10-19T01:00:57.246Z] Time:          Wed Oct 18 2023 18:00:57 GMT-0700 (Pacific Daylight Time)
+[debug] [2023-10-19T01:00:57.246Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-10-19T01:00:57.341Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-10-19T01:00:57.342Z] > authorizing via signed-in user (jknt@uw.edu)
+[debug] [2023-10-19T01:00:57.852Z] openjdk version "20.0.2" 2023-07-18
+
+[debug] [2023-10-19T01:00:57.853Z] OpenJDK Runtime Environment (build 20.0.2+9-78)
+OpenJDK 64-Bit Server VM (build 20.0.2+9-78, mixed mode, sharing)
+
+[debug] [2023-10-19T01:00:57.856Z] Parsed Java major version: 20
+[info] i  emulators: Starting emulators: auth, database {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: auth, database"}}
+[debug] [2023-10-19T01:00:58.541Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-10-19T01:00:58.541Z] [auth] Authentication Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-10-19T01:00:58.541Z] [database] Database Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-10-19T01:00:58.541Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"auth":[{"address":"127.0.0.1","family":"IPv4","port":9099}],"database":[{"address":"127.0.0.1","family":"IPv4","port":9000}]},"metadata":{"message":"assigned listening specs for emulators"}}
+[debug] [2023-10-19T01:00:58.554Z] [hub] writing locator at /var/folders/9m/1fvxdpbx38g49dm3vw_yp7cc0000gn/T/hub-chatgpt-a-brief-rendition.json
+[debug] [2023-10-19T01:00:58.561Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/chatgpt-a-brief-rendition [none]
+[debug] [2023-10-19T01:00:58.744Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/chatgpt-a-brief-rendition 200
+[debug] [2023-10-19T01:00:58.744Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/chatgpt-a-brief-rendition {"projectId":"chatgpt-a-brief-rendition","projectNumber":"1033318203301","displayName":"ChatGPT A Brief Rendition","name":"projects/chatgpt-a-brief-rendition","resources":{"hostingSite":"chatgpt-a-brief-rendition","realtimeDatabaseInstance":"chatgpt-a-brief-rendition-default-rtdb"},"state":"ACTIVE","etag":"1_570cbbe1-d06f-4831-950a-511d63b31ad0"}
+[debug] [2023-10-19T01:00:58.744Z] database rules config:  []
+[warn] ⚠  database: Did not find a Realtime Database rules file specified in a firebase.json config file. The emulator will default to allowing all reads and writes. Learn more about this option: https://firebase.google.com/docs/emulator-suite/install_and_configure#security_rules_configuration. {"metadata":{"emulator":{"name":"database"},"message":"Did not find a Realtime Database rules file specified in a firebase.json config file. The emulator will default to allowing all reads and writes. Learn more about this option: https://firebase.google.com/docs/emulator-suite/install_and_configure#security_rules_configuration."}}
+[info] i  database: downloading firebase-database-emulator-v4.11.0.jar... {"metadata":{"emulator":{"name":"database"},"message":"downloading firebase-database-emulator-v4.11.0.jar..."}}
+[debug] [2023-10-19T01:00:58.756Z] >>> [apiv2][query] GET https://storage.googleapis.com/firebase-preview-drop/emulator/firebase-database-emulator-v4.11.0.jar 
+[debug] [2023-10-19T01:00:58.931Z] <<< [apiv2][status] GET https://storage.googleapis.com/firebase-preview-drop/emulator/firebase-database-emulator-v4.11.0.jar 200
+[debug] [2023-10-19T01:00:58.931Z] <<< [apiv2][body] GET https://storage.googleapis.com/firebase-preview-drop/emulator/firebase-database-emulator-v4.11.0.jar [stream]
+[debug] [2023-10-19T01:01:02.028Z] Ignoring unsupported arg: projectId {"metadata":{"emulator":{"name":"database"},"message":"Ignoring unsupported arg: projectId"}}
+[debug] [2023-10-19T01:01:02.030Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"database"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2023-10-19T01:01:02.030Z] Ignoring unsupported arg: rules {"metadata":{"emulator":{"name":"database"},"message":"Ignoring unsupported arg: rules"}}
+[debug] [2023-10-19T01:01:02.030Z] Starting Database Emulator with command {"binary":"java","args":["-Duser.language=en","-jar","/Users/josephtran/.cache/firebase/emulators/firebase-database-emulator-v4.11.0.jar","--host","127.0.0.1","--port",9000,"--single_project_mode","Warning"],"optionalArgs":["port","host","functions_emulator_port","functions_emulator_host","single_project_mode"],"joinArgs":false} {"metadata":{"emulator":{"name":"database"},"message":"Starting Database Emulator with command {\"binary\":\"java\",\"args\":[\"-Duser.language=en\",\"-jar\",\"/Users/josephtran/.cache/firebase/emulators/firebase-database-emulator-v4.11.0.jar\",\"--host\",\"127.0.0.1\",\"--port\",9000,\"--single_project_mode\",\"Warning\"],\"optionalArgs\":[\"port\",\"host\",\"functions_emulator_port\",\"functions_emulator_host\",\"single_project_mode\"],\"joinArgs\":false}"}}
+[info] i  database: Database Emulator logging to database-debug.log {"metadata":{"emulator":{"name":"database"},"message":"Database Emulator logging to \u001b[1mdatabase-debug.log\u001b[22m"}}
+[debug] [2023-10-19T01:01:02.961Z] 18:01:02.960 [NamespaceSystem-akka.actor.default-dispatcher-5] INFO akka.event.slf4j.Slf4jLogger - Slf4jLogger started
+ {"metadata":{"emulator":{"name":"database"},"message":"18:01:02.960 [NamespaceSystem-akka.actor.default-dispatcher-5] INFO akka.event.slf4j.Slf4jLogger - Slf4jLogger started\n"}}
+[debug] [2023-10-19T01:01:03.039Z] 18:01:03.038 [main] INFO com.firebase.server.forge.App$ - Listening at 127.0.0.1:9000
+ {"metadata":{"emulator":{"name":"database"},"message":"18:01:03.038 [main] INFO com.firebase.server.forge.App$ - Listening at 127.0.0.1:9000\n"}}
+[warn] ⚠  emulators: The Emulator UI is not starting, either because none of the emulated products have an interaction layer in Emulator UI or it cannot determine the Project ID. Pass the --project flag to specify a project. {"metadata":{"emulator":{"name":"hub"},"message":"The Emulator UI is not starting, either because none of the emulated products have an interaction layer in Emulator UI or it cannot determine the Project ID. Pass the --project flag to specify a project."}}
+[info] 
+┌─────────────────────────────────────────────────────────────┐
+│ ✔  All emulators ready! It is now safe to connect your app. │
+└─────────────────────────────────────────────────────────────┘
+
+┌────────────────┬────────────────┐
+│ Emulator       │ Host:Port      │
+├────────────────┼────────────────┤
+│ Authentication │ 127.0.0.1:9099 │
+├────────────────┼────────────────┤
+│ Database       │ 127.0.0.1:9000 │
+└────────────────┴────────────────┘
+  Emulator Hub running at 127.0.0.1:4400
+  Other reserved ports: 4500
+
+Issues? Report them at https://github.com/firebase/firebase-tools/issues and attach the *-debug.log files.
+ 
+[debug] [2023-10-19T01:02:17.458Z] 18:02:17.457 [NamespaceSystem-akka.actor.default-dispatcher-5] INFO com.firebase.core.namespace.NamespaceActor - 127 successfully activated FBKV (SurveyIdle(0)) wait: 76ms, init: 0ms
+ {"metadata":{"emulator":{"name":"database"},"message":"18:02:17.457 [NamespaceSystem-akka.actor.default-dispatcher-5] INFO com.firebase.core.namespace.NamespaceActor - 127 successfully activated FBKV (SurveyIdle(0)) wait: 76ms, init: 0ms\n"}}
