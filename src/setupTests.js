@@ -2,7 +2,102 @@
 
 //DEFINE INITIAL DATA STORAGE
 const MOCK_INITIAL_DATA = {
-  allPosts: {}
+  "discussion_log": {
+    "0": {
+      "dislikes": 0,
+      "likes": 100,
+      "numPosts": 45,
+      "post": "Hey there, I just wanted to share how impressed I am with ChatGPT! As an administrator, I'm constantly looking for ways to streamline our workflow and improve our communication, and ChatGPT has been a game-changer. Its natural language processing and ability to generate human-like responses is truly amazing. I'm blown away by the way ChatGPT can understand and interpret complex questions and provide thoughtful answers. It has saved us so much time and effort, and has greatly enhanced our ability to serve our clients. Thank you, ChatGPT, for being such an innovative and valuable tool!",
+      "timestamp": 1320224640000,
+      "topic": "ChatGPT is so cool!",
+      "totalPoints": 4586,
+      "userId": "User1",
+      "userImg": "/img/User1.jpg",
+      "userName": "Ashley Williams",
+      "userRole": "System Administrator"
+    },
+    "1": {
+      "dislikes": 0,
+      "likes": 10,
+      "numPosts": 450,
+      "post": "As a data scientist, I'm constantly exploring new ways to extract insights from data. ChatGPT has been an incredible resource in this regard. Its ability to process and analyze large volumes of text data has greatly expanded our capabilities in natural language processing and sentiment analysis. With ChatGPT, we've been able to quickly and accurately analyze customer feedback and social media conversations, gaining valuable insights into our clients' needs and preferences. It's been amazing to see how ChatGPT's advanced algorithms and machine learning capabilities can help us uncover patterns and trends that would have been nearly impossible to detect otherwise. I'm truly grateful for the contributions ChatGPT has made to our data science efforts, and I look forward to continuing to explore all the ways it can help us make better decisions and drive better outcomes.",
+      "timestamp": 1320162120000,
+      "topic": "ChatGPT is so useful!",
+      "totalPoints": 1234,
+      "userId": "User2",
+      "userImg": "/img/User2.jpg",
+      "userName": "Brandon Nguyen",
+      "userRole": "Data Scientist"
+    },
+    "2": {
+      "dislikes": 0,
+      "likes": 0,
+      "numPosts": 100,
+      "post": "As a product manager, I'm always on the lookout for ways to enhance our products and services and meet our customers' evolving needs. ChatGPT has been an incredible asset in this regard. Its natural language processing and machine learning capabilities have enabled us to create highly personalized and engaging user experiences. By integrating ChatGPT into our customer service and support channels, we've been able to improve our response times, increase customer satisfaction, and reduce overall support costs. Additionally, ChatGPT has allowed us to gain deeper insights into customer behavior and preferences, which has informed our product development and marketing efforts. I'm continually impressed by the flexibility and power of ChatGPT, and I'm excited to explore all the ways it can help us drive innovation and growth across our product portfolio.",
+      "timestamp": 1320161040000,
+      "topic": "AI is advancing for the better",
+      "totalPoints": 10000,
+      "userId": "User3",
+      "userImg": "/img/User3.jpg",
+      "userName": "Rachel Davis",
+      "userRole": "Product Manager"
+    },
+    "-NQPgf2uVdHWc7zFiw-p": {
+      "dislikes": 0,
+      "likes": 0,
+      "post": "I love using chatgpt :D",
+      "timestamp": 1678706389215,
+      "topic": "ChatGPT IS AWESOME!",
+      "userId": "DCq5rd3SARQE3jhKsBvmCKldFDO2",
+      "userImg": "https://lh3.googleusercontent.com/a/AGNmyxbq5ufVicjRtof1zRHonZZsaVA8RvN8aDLTEaC3=s96-c",
+      "userName": "Joseph K N Tran",
+      "userRole": ""
+    },
+    "-NQR6jMWSCRHxi1hhGO5": {
+      "dislikes": 0,
+      "likes": 0,
+      "post": "So very cool ",
+      "timestamp": 1678730261974,
+      "topic": "SO cool",
+      "userId": "4eoENSBx4XeyMafUnLfdlx4nykd2",
+      "userImg": "/img/null.png",
+      "userName": "HP",
+      "userRole": ""
+    },
+    "-NQTQY-uIYdvonZxuIaW": {
+      "dislikes": 0,
+      "likes": 0,
+      "post": "Pro: One of the most significant positive reasons to use ChatGPT is its ability to provide quick and accurate responses to a wide range of queries. As a language model trained on vast amounts of data, ChatGPT can provide high-quality responses to a diverse range of questions, including general knowledge questions, medical inquiries, technical problems, and more. ChatGPT can be an excellent resource for people who need fast and reliable answers to their questions.\n\nCon: One of the negative reasons to use ChatGPT is that it can sometimes provide incomplete or inaccurate responses to queries. While ChatGPT is an advanced language model that has been trained on vast amounts of data, it is still an artificial intelligence system and may not always understand the nuances of language or the context of a given question. As a result, ChatGPT may occasionally provide incorrect or incomplete information, which could potentially lead to confusion or misinformation. Users should always exercise caution and verify information provided by ChatGPT with additional sources where necessary.",
+      "timestamp": 1678769008660,
+      "topic": "PRO/CONS of ChatGPT",
+      "userId": "sbEV8SEXgUQrNeOJO81DSOWr6Vp2",
+      "userImg": "/img/null.png",
+      "userName": "Vivian Hung",
+      "userRole": ""
+    },
+    "-NQXAm7-ti-9xj3v3gW8": {
+      "dislikes": 0,
+      "likes": 0,
+      "post": "s",
+      "timestamp": 1678831985807,
+      "topic": "s",
+      "userId": "zPsSOUexajbKKYakEQU7I0KHxSn2",
+      "userImg": "/img/null.png",
+      "userName": "s",
+      "userRole": ""
+    },
+    "-NQXOkEiyIXVBrmaBoz2": {
+      "dislikes": 0,
+      "likes": 0,
+      "post": "Did this post work? Would chatgpt help me?",
+      "timestamp": 1678835646980,
+      "topic": "Tims question about ChatGPT (while grading)",
+      "userId": "OjXXPQD98mTfio0rr0WO7IT8Ezl1",
+      "userImg": "/img/null.png",
+      "userName": "D User",
+      "userRole": ""
+    }
+  },
 }
 
 //DEFINE LOGGED IN USER
