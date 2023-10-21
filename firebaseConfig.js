@@ -24,4 +24,4 @@ if (process.env.NODE_ENV === 'development') {
 
   export const auth = app.auth();
   export const firestore = app.firestore();
-  
+  export const database = firebase.database();
