@@ -52,20 +52,20 @@ const testUser = {
 const testdb = [
   { "userId": "User1", "userName": "Ashley Williams", "userImg": "/img/User1.jpg", "userRole": "System Administrator", "numPosts": 45, "totalPoints": 4586, "timestamp": 1320224640000, "topic": "ChatGPT is so cool!", "post": "Hey there, I just wanted to share how impressed I am with ChatGPT! As an administrator, I'm constantly looking for ways to streamline our workflow and improve our communication, and ChatGPT has been a game-changer. Its natural language processing and ability to generate human-like responses is truly amazing. I'm blown away by the way ChatGPT can understand and interpret complex questions and provide thoughtful answers. It has saved us so much time and effort, and has greatly enhanced our ability to serve our clients. Thank you, ChatGPT, for being such an innovative and valuable tool!"},
   { "userId": "User2", "userName": "Brandon Nguyen", "userImg": "/img/User2.jpg", "userRole": "Data Scientist", "numPosts": 450, "totalPoints": 1234, "timestamp": 1320162120000, "topic": "ChatGPT is so useful!", "post": "As a data scientist, I'm constantly exploring new ways to extract insights from data. ChatGPT has been an incredible resource in this regard. Its ability to process and analyze large volumes of text data has greatly expanded our capabilities in natural language processing and sentiment analysis. With ChatGPT, we've been able to quickly and accurately analyze customer feedback and social media conversations, gaining valuable insights into our clients' needs and preferences. It's been amazing to see how ChatGPT's advanced algorithms and machine learning capabilities can help us uncover patterns and trends that would have been nearly impossible to detect otherwise. I'm truly grateful for the contributions ChatGPT has made to our data science efforts, and I look forward to continuing to explore all the ways it can help us make better decisions and drive better outcomes."},
-  { "userId": "User3", "userName": "Rachel Davis", "userImg": "/img/User3.jpg", "userRole": "Product Manager", "numPosts": 100, "totalPoints": 10000, "timestamp": 1320161040000, "topic": "AI is advancing for the better", "post": "As a product manager, I'm always on the lookout for ways to enhance our products and services and meet our customers' evolving needs. ChatGPT has been an incredible asset in this regard. Its natural language processing and machine learning capabilities have enabled us to create highly personalized and engaging user experiences. By integrating ChatGPT into our customer service and support channels, we've been able to improve our response times, increase customer satisfaction, and reduce overall support costs. Additionally, ChatGPT has allowed us to gain deeper insights into customer behavior and preferences, which has informed our product development and marketing efforts. I'm continually impressed by the flexibility and power of ChatGPT, and I'm excited to explore all the ways it can help us drive innovation and growth across our product portfolio."}  
+  { "userId": "User3", "userName": "Rachel Davis", "userImg": "/img/User3.jpg", "userRole": "Product Manager", "numPosts": 100, "totalPoints": 10000, "timestamp": 1320161040000, "topic": "AI is advancing for the better", "post": "As a product manager, I'm always on the lookout for ways to enhance our products and services and meet our customers' evolving needs. ChatGPT has been an incredible asset in this regard. Its natural language processing and machine learning capabilities have enabled us to create highly personalized and engaging user experiences. By integrating ChatGPT into our customer service and support channels, we've been able to improve our response times, increase customer satisfaction, and reduce overall support costs. Additionally, ChatGPT has allowed us to gain deeper insights into customer behavior and preferences, which has informed our product development and marketing efforts. I'm continually impressed by the flexibility and power of ChatGPT, and I'm excited to explore all the ways it can help us drive innovation and growth across our product portfolio."}
 ]
 
 
 describe('Integration: App', () => {
   test('Renders Header/Footer', () => {
-    render(<App />, {wrapper: BrowserRouter}); 
+    render(<App />, {wrapper: BrowserRouter});
     expect(screen.getByText('ChatGPT: A Brief Rendition'));
-    expect(screen.getByText('email@chatgpt.uw.edu')); 
+    expect(screen.getByText('email@chatgpt.uw.edu'));
   })
-  
+
   test('Render Menu (User signed in)', () => {
     render(<Menu currentUser={testUser} />, {wrapper: BrowserRouter})
-  
+
     expect(screen.getByText('cottage'))
     expect(screen.getByText('About'))
     expect(screen.getByText('Discussion'))
@@ -76,7 +76,7 @@ describe('Integration: App', () => {
 
   test('Render Menu (User signed out)', () => {
     render(<Menu currentUser={testUser} />, {wrapper: BrowserRouter})
-  
+
     expect(screen.getByText('cottage'))
     expect(screen.getByText('About'))
     expect(screen.getByText('Discussion'))
@@ -97,7 +97,7 @@ describe('Integration: App', () => {
   })
 
   test('Menu Before sign in', () => {
-    const menu = render(<Menu />, {wrapper: BrowserRouter}) 
+    const menu = render(<Menu />, {wrapper: BrowserRouter})
     const signInButton = menu.getByText('Sign In');
     expect(signInButton).toBeTruthy();
     userEvent.click(signInButton);
@@ -106,7 +106,7 @@ describe('Integration: App', () => {
 
   test('Renders Home page', () => {
     render(<HomePage />, {wrapper: BrowserRouter})
-    expect(screen.getByText('What is ChatGPT?')); 
+    expect(screen.getByText('What is ChatGPT?'));
   })
 
   test('Renders About page', () => {
@@ -115,13 +115,13 @@ describe('Integration: App', () => {
         <App />
       </MemoryRouter>
     );
-    expect(screen.getByText('About why we should care (In Depth)')); 
+    expect(screen.getByText('About why we should care (In Depth)'));
 
   })
-  
-  test('Renders Discussion page', () => {    
+
+  test('Renders Discussion page', () => {
     render(<DiscussionPage currentUser={testUser}/>)
-    expect(screen.getByText('Posting as: Test User')); 
+    expect(screen.getByText('Posting as: Test User'));
   })
 
   test('Test Tweets filter button', () => {
@@ -155,12 +155,12 @@ describe('Integration: App', () => {
         <App currentUser={testUser}/>
       </MemoryRouter>
     );
-    expect(screen.getByText('Please sign in to view content')); 
+    expect(screen.getByText('Please sign in to view content'));
   })
 
   test('New Render Sign in Page', () => {
     render(<SignInPage currentUser={testUser} />, {wrapper: BrowserRouter})
-    expect(screen.getByText('Topic: ChatGPT is so cool!')); 
+    expect(screen.getByText('Topic: ChatGPT is so cool!'));
   })
 
   test('Render Profile Page', () => {
@@ -189,7 +189,7 @@ describe('Integration: App', () => {
     auth.signInWithEmailAndPassword = signInMock;
     const email = 'test@example.com';
     const password = 'testpassword';
-  
+
     auth.signInWithEmailAndPassword(email, password);
     expect(signInMock).toHaveBeenCalledWith(email, password);
   });
@@ -197,13 +197,13 @@ describe('Integration: App', () => {
 
 describe('Test Discussion Posts Functionality', () => {
   test('Render discussion with database', () => {
-    render(<DiscussionPage postList={testdb} currentUser={testUser}/>, {wrapper: BrowserRouter}); 
+    render(<DiscussionPage postList={testdb} currentUser={testUser}/>, {wrapper: BrowserRouter});
 
   })
-  
+
 
   test('Write new post', async () => {
-    render(<DiscussionPage currentUser={testUser}/>, {wrapper: BrowserRouter}); 
+    render(<DiscussionPage currentUser={testUser}/>, {wrapper: BrowserRouter});
     const topicText = screen.getByPlaceholderText('Type a topic');
     const postText = screen.getByPlaceholderText('Type a new post');
     const submitButton = screen.getByText('Submit');
@@ -220,15 +220,15 @@ describe('Test Discussion Posts Functionality', () => {
     }
     const onLikePost = jest.fn();
     const onDislikePost = jest.fn();
-    render(<LikeDislike post={postProp} onLikePost={onLikePost} onDislikePost={onDislikePost}/>, {wrapper: BrowserRouter}); 
+    render(<LikeDislike post={postProp} onLikePost={onLikePost} onDislikePost={onDislikePost}/>, {wrapper: BrowserRouter});
     const likeButton = screen.getByRole('button', {name: `Like ${postProp.likes}`})
     const dislikeButton = screen.getByRole('button', {name: `Dislike ${postProp.dislikes}`})
-    
+
     await userEvent.click(likeButton);
     expect(screen.getByRole('button', {name: `Like ${postProp.likes + 1}`}))
     await userEvent.click(likeButton);
     expect(screen.getByRole('button', {name: `Like ${postProp.likes}`}))
-    
+
     await userEvent.click(dislikeButton);
     expect(screen.getByRole('button', {name: `Dislike ${postProp.dislikes + 1}`}))
     await userEvent.click(dislikeButton);
@@ -240,7 +240,7 @@ describe('Test Discussion Posts Functionality', () => {
     await userEvent.click(dislikeButton);
     expect(screen.getByRole('button', {name: `Like ${postProp.likes}`}))
     expect(screen.getByRole('button', {name: `Dislike ${postProp.dislikes + 1}`}))
-    
+
     await userEvent.click(dislikeButton);
     expect(screen.getByRole('button', {name: `Dislike ${postProp.dislikes}`}))
     expect(screen.getByRole('button', {name: `Like ${postProp.likes}`}))
