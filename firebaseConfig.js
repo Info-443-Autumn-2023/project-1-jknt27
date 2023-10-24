@@ -7,7 +7,7 @@ import 'firebase/firestore';
 export const firebaseConfig = {
     apiKey: "AIzaSyC6b_eRytm05CFQ8ISFhdOGqe1DdaFeXCo",
     authDomain: "chatgpt-a-brief-rendition.firebaseapp.com",
-    databaseURL: "https://chatgpt-a-brief-rendition-default-rtdb.firebaseio.com",
+    databaseURL: "http://127.0.0.1:9000/?ns=chatgpt-a-brief-rendition",
     projectId: "chatgpt-a-brief-rendition",
     storageBucket: "chatgpt-a-brief-rendition.appspot.com",
     messagingSenderId: "1033318203301",
@@ -15,8 +15,8 @@ export const firebaseConfig = {
 };
   
 if (process.env.NODE_ENV === 'development') {
-    firebaseConfig.authEmulatorHost = 'localhost:9099';
-    firebaseConfig.databaseURL = 'http://localhost:9000?ns=YOUR_NAMESPACE';
+    firebaseConfig.authEmulatorHost = 'http://127.0.0.1:9099';
+    firebaseConfig.databaseURL = 'http://127.0.0.1:9000/?ns=chatgpt-a-brief-rendition';
 }
 
   // Initialize Firebase

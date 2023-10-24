@@ -15,3 +15,12 @@ Our site can be found [here](https://chatgpt-a-brief-rendition.web.app/home).
 **Checkpoint 2: Optional Element**
 
 I would analyze the architectural quality of the discussion posts page write unit tests for that.
+
+
+## Checkpoint 3: Testing
+
+I am currently working on debugging the Firebase Emulator Suite, which is necessary for testing the database component of my application. Here is the current test coverage report.
+
+![Checkpoint 3 Test Coverage](./images/CurrentTestCoverage.png)
+
+To execute my tests, please run `npm test App.test.js -- --coverage --collectCoverageFrom='src/components/*.js'`.

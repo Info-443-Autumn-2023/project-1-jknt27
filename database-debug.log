@@ -1,3 +1,8 @@
-19:14:11.346 [NamespaceSystem-akka.actor.default-dispatcher-5] INFO akka.event.slf4j.Slf4jLogger - Slf4jLogger started
-19:14:11.441 [main] INFO com.firebase.server.forge.App$ - Listening at 127.0.0.1:9000
-19:15:24.495 [NamespaceSystem-akka.actor.default-dispatcher-5] INFO com.firebase.core.namespace.NamespaceActor - chatgpt-a-brief-rendition successfully activated FBKV (SurveyIdle(0)) wait: 97ms, init: 0ms
+11:17:16.552 [NamespaceSystem-akka.actor.default-dispatcher-4] INFO akka.event.slf4j.Slf4jLogger - Slf4jLogger started
+11:17:16.643 [main] INFO com.firebase.server.forge.App$ - Listening at 127.0.0.1:9000
+11:17:17.794 [NamespaceSystem-akka.actor.default-dispatcher-5] INFO com.firebase.core.namespace.NamespaceActor - chatgpt-a-brief-rendition successfully activated FBKV (SurveyIdle(0)) wait: 77ms, init: 0ms
+16:32:38.126 [FirebaseWorkerPool-1-1] WARN com.firebase.core.persistence.backend.dummy.EmulatorMetadataPersistence - Multiple projectIds are not recommended in single project mode. Requested 
+namespace 127, but the emulator is configured for chatgpt-a-brief-rendition. To 
+opt-out of single project mode add/set the single_project_mode: false property in 
+the firebase.json emulators config. 
+16:32:38.137 [NamespaceSystem-akka.actor.default-dispatcher-95] INFO com.firebase.core.namespace.NamespaceActor - 127 successfully activated FBKV (SurveyIdle(0)) wait: 4ms, init: 0ms

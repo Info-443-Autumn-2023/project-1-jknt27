@@ -1,13 +1,13 @@
+import { getDatabase, connectDatabaseEmulator } from "firebase/database";
+import { initializeTestApp } from '@firebase/rules-unit-testing';
+import * as admin from 'firebase-admin';
+
 import '@testing-library/jest-dom';
 import { getByText, waitFor } from '@testing-library/react';
 
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import firebase, { initializeApp } from 'firebase/app';
-import { getDatabase, connectDatabaseEmulator, ref } from "firebase/database";
-// import { getAuth, connectAuthEmulator } from "firebase/auth";
-import admin from 'firebase-admin';
-import "firebase/auth";
+import { getAuth, signOut } from 'firebase/auth'
 import MockDatabase from './setupTests';
 
 import App from './components/App';
@@ -16,18 +16,20 @@ import Header from './components/Header'
 import HomePage from './components/HomePage';
 import About from './components/About';
 import DiscussionPage, { RenderAllPost } from './components/DiscussionPage';
-import Tweets from './components/Tweets';
+import Tweets, { TestLoadTweets } from './components/Tweets';
 import Footer from './components/Footer';
 import SignInPage from './components/SignInPage';
 import ProfilePage from './components/ProfilePage';
 import ErrorPage from './components/ErrorPage';
 import LikeDislike from './components/LikeDislike';
 
-import { auth, firebaseConfig, database } from '../firebaseConfig'
+// import { auth, firebaseConfig, database } from '../firebaseConfig'
 import { BrowserRouter, Router, MemoryRouter } from 'react-router-dom';
 import USERS from './data/users.json';
 import TWEETS from './data/tweets.json';
 import { Button } from 'bootstrap';
+import { initializeTestEnvironment } from '@firebase/rules-unit-testing';
+// import { initializeApp } from "firebase/app";
 
 
 // Auth mock
@@ -55,11 +57,8 @@ const testdb = [
 
 
 describe('Integration: App', () => {
-  
   test('Renders Header/Footer', () => {
     render(<App />, {wrapper: BrowserRouter}); 
-    // expect(window.location.pathname).toBe('/');
-    // expect(window.location.pathname).toBe('/home');
     expect(screen.getByText('ChatGPT: A Brief Rendition'));
     expect(screen.getByText('email@chatgpt.uw.edu')); 
   })
@@ -76,8 +75,6 @@ describe('Integration: App', () => {
   })
 
   test('Render Menu (User signed out)', () => {
-    // const auth = getAuth();
-    // connectAuthEmulator(auth, "http://127.0.0.1:9099");
     render(<Menu currentUser={testUser} />, {wrapper: BrowserRouter})
   
     expect(screen.getByText('cottage'))
@@ -91,22 +88,24 @@ describe('Integration: App', () => {
   })
 
   test('Toggle Hamburger Menu', () => {
-    window.innerWidth = 375;
-    window.innerHeight = 667;
-    render(<Menu currentUser={testUser} />, {wrapper: BrowserRouter})
-    screen.getbyrole('button', {name: 'menu'})  
-    // screen.debug()
-    // userEvent.click(container.firstChild.classList.contains('fa fa-bars'))
+    const menu = render(<Menu currentUser={testUser} />, {wrapper: BrowserRouter})
+    const button = menu.getByTestId('hamburgerMenu');
+    expect(button).toBeTruthy();
+    expect(button).toHaveAttribute('data-testid', 'hamburgerMenu');
+    userEvent.click(button);
+    expect(button).toBeTruthy();
+  })
+
+  test('Menu Before sign in', () => {
+    const menu = render(<Menu />, {wrapper: BrowserRouter}) 
+    const signInButton = menu.getByText('Sign In');
+    expect(signInButton).toBeTruthy();
+    userEvent.click(signInButton);
+    expect(button).toBeTruthy();
   })
 
   test('Renders Home page', () => {
-    render(
-      <MemoryRouter initialEntries={['/home']}>
-        <App />
-      </MemoryRouter>
-    );
-  
-    // Initial render should show the home page
+    render(<HomePage />, {wrapper: BrowserRouter})
     expect(screen.getByText('What is ChatGPT?')); 
   })
 
@@ -122,7 +121,6 @@ describe('Integration: App', () => {
   
   test('Renders Discussion page', () => {    
     render(<DiscussionPage currentUser={testUser}/>)
-
     expect(screen.getByText('Posting as: Test User')); 
   })
 
@@ -136,15 +134,14 @@ describe('Integration: App', () => {
     expect(filterButton);
     userEvent.click(filterButton);
     expect(screen.getByText('Filter Date: Ascending'));
+    userEvent.click(filterButton);
+    expect(screen.getByText('Filter Date: Descending'));
   })
 
-  test('Renders Tweet Page', async () => {
-    await render(<Tweets tweets={TWEETS}/>)
-  
-    // const tweetElements = container.querySelectorAll('.container');
-  
-    // expect(tweetElements.length).toBeGreaterThan(0);
+  test('Renders Tweet Page', () => {
+    render(<Tweets tweets={TWEETS}/>)
     screen.findByText('For the past two months,')
+    screen.debug()
   })
 
   test('Renders Error Page', () => {
@@ -155,15 +152,15 @@ describe('Integration: App', () => {
   test('Renders Sign In page', () => {
     render(
       <MemoryRouter initialEntries={['/signin']}>
-        <App currentUse={testUser}/>
+        <App currentUser={testUser}/>
       </MemoryRouter>
     );
     expect(screen.getByText('Please sign in to view content')); 
   })
 
   test('New Render Sign in Page', () => {
-    render(<SignInPage currentUser={{ userId: 'someUserId' }} />)
-    expect(Navigate).toHaveBeenCalledWith({ to: '/discussion' }, {});
+    render(<SignInPage currentUser={testUser} />, {wrapper: BrowserRouter})
+    expect(screen.getByText('Topic: ChatGPT is so cool!')); 
   })
 
   test('Render Profile Page', () => {
@@ -176,15 +173,14 @@ describe('Integration: App', () => {
     const imgUpload = profile.container.querySelector('#imageUploadInput');
     const file = new File(['test-image'], 'user.png', { type: 'image/png' });
     userEvent.upload(imgUpload, file);
-    // userEvent.click(saveImg);
     expect(imgUpload.name).toBe('user.png');
   })
 
   test('Profile Page submit picture', () => {
     const handleImageUpload = jest.fn()
     const profile = render(<ProfilePage currentUser={testUser} />, {wrapper: BrowserRouter});
-    const imgUpload = profile.container.querySelector('#saveImg');
-    screen.getByText('Save to Profile')
+    userEvent.click(profile.getByTestId('saveImg'))
+    expect(handleImageUpload).toHaveBeenCalled();
 
   })
 
@@ -197,49 +193,12 @@ describe('Integration: App', () => {
     auth.signInWithEmailAndPassword(email, password);
     expect(signInMock).toHaveBeenCalledWith(email, password);
   });
-  
-  // test('Test Sign Out Functionality', () => {
-  //   const signOutMock = jest.fn();
-  //   auth.signOut = signOutMock;
-  
-  //   auth.signOut();
-  
-  //   expect(signOutMock).toHaveBeenCalled();
-  // });
-
 })
 
 describe('Test Discussion Posts Functionality', () => {
-  // const app = firebase.initializeApp(firebaseConfig);
-//   const db = getDatabase();
-// if (window.location.hostname === "localhost") {
-//  //can only run this once per "instance" though??
-//  connectDatabaseEmulator(db, "localhost", 9000); //use emulator
-// }
-  
-  // beforeEach(() => {
-  //   fetchMock.resetMocks()
-  // })
-  // beforeAll(async () => {
-    //   await database.ref().set('./data/firebase_data.json')
-    // })
-    
   test('Render discussion with database', () => {
-    // db.ref('/').set(data);
     render(<DiscussionPage postList={testdb} currentUser={testUser}/>, {wrapper: BrowserRouter}); 
-    // screen.debug()
 
-    // beforeAll(async () => {
-    // })
-    // const snapshot =  admin.database.ref('./data/firebase_data.json').child('discussion_log/0').once('value');
-    // const user = snapshot.val();
-    // expect(user.userName).toBe('Ashley Williams');
-
-    // render(
-    //   <MemoryRouter initialEntries={['/discussion']}>
-    //     <App />
-    //   </MemoryRouter>
-    // );
   })
   
 
@@ -264,24 +223,39 @@ describe('Test Discussion Posts Functionality', () => {
     render(<LikeDislike post={postProp} onLikePost={onLikePost} onDislikePost={onDislikePost}/>, {wrapper: BrowserRouter}); 
     const likeButton = screen.getByRole('button', {name: `Like ${postProp.likes}`})
     const dislikeButton = screen.getByRole('button', {name: `Dislike ${postProp.dislikes}`})
+    
+    await userEvent.click(likeButton);
+    expect(screen.getByRole('button', {name: `Like ${postProp.likes + 1}`}))
+    await userEvent.click(likeButton);
+    expect(screen.getByRole('button', {name: `Like ${postProp.likes}`}))
+    
+    await userEvent.click(dislikeButton);
+    expect(screen.getByRole('button', {name: `Dislike ${postProp.dislikes + 1}`}))
+    await userEvent.click(dislikeButton);
+    expect(screen.getByRole('button', {name: `Dislike ${postProp.dislikes}`}))
+    expect(screen.getByRole('button', {name: `Like ${postProp.likes}`}))
+
     await userEvent.click(likeButton);
     expect(screen.getByRole('button', {name: `Like ${postProp.likes + 1}`}))
     await userEvent.click(dislikeButton);
     expect(screen.getByRole('button', {name: `Like ${postProp.likes}`}))
     expect(screen.getByRole('button', {name: `Dislike ${postProp.dislikes + 1}`}))
+    
+    await userEvent.click(dislikeButton);
+    expect(screen.getByRole('button', {name: `Dislike ${postProp.dislikes}`}))
+    expect(screen.getByRole('button', {name: `Like ${postProp.likes}`}))
+    await userEvent.click(dislikeButton);
+    expect(screen.getByRole('button', {name: `Dislike ${postProp.dislikes + 1}`}))
+    await userEvent.click(likeButton);
+    expect(screen.getByRole('button', {name: `Dislike ${postProp.dislikes}`}))
+    expect(screen.getByRole('button', {name: `Like ${postProp.likes + 1}`}))
   })
-
-  
 })
 
-
 describe('Testing Tweets Page', () => {
-  
   test('Render all Tweets', () => {
     const setTweets = jest.fn();
     const setDescending = jest.fn();
-    <Tweets tweets={TWEETS.tweets} setTweets={setTweets} setDescending={setDescending} />
-    screen.debug()
+    <Tweets tweets={TWEETS} setTweets={setTweets} setDescending={setDescending} />
   })
-  
 })
