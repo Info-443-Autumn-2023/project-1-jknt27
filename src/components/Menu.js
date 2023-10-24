@@ -22,7 +22,7 @@ export default function Menu(props) {
                     <li><img src='./img/favicon.png' alt='A picture of the website logo.' /></li>
 
                     <li>
-                        <button data-testid='hamburgerMenu' className='hamburger-menu' onClick={openOrClose} aria-label='menu'><i className='fa fa-bars' ></i></button>
+                        <button data-testid='hamburger-menu' className='hamburger-menu' onClick={openOrClose} aria-label='menu'><i className='fa fa-bars' ></i></button>
                         {isOpen && (
                             <ul className='hamburger-menu-list'>
                                 <li className='hamburger-menu-item'>
@@ -51,7 +51,7 @@ export default function Menu(props) {
                                 }
                                 {!currentUser.userId &&
                                     <li>
-                                        <NavLink className="link" to="/signin">
+                                        <NavLink data-testid="sign-in-link" className="link" to="/signin">
                                             Sign In
                                         </NavLink>
                                     </li>

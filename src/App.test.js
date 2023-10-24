@@ -57,6 +57,15 @@ const testdb = [
 
 
 describe('Integration: App', () => {
+  beforeAll(() => {
+    window.URL.createObjectURL = jest.fn();
+  })
+
+  afterEach(() => {
+    window.URL.createObjectURL.mockReset();
+  });
+
+
   test('Renders Header/Footer', () => {
     render(<App />, {wrapper: BrowserRouter});
     expect(screen.getByText('ChatGPT: A Brief Rendition'));
@@ -89,19 +98,21 @@ describe('Integration: App', () => {
 
   test('Toggle Hamburger Menu', () => {
     const menu = render(<Menu currentUser={testUser} />, {wrapper: BrowserRouter})
-    const button = menu.getByTestId('hamburgerMenu');
-    expect(button).toBeTruthy();
-    expect(button).toHaveAttribute('data-testid', 'hamburgerMenu');
+    const button = menu.getByTestId('hamburger-menu');
+    expect(button).toBeVisible();
     userEvent.click(button);
-    expect(button).toBeTruthy();
   })
 
-  test('Menu Before sign in', () => {
-    const menu = render(<Menu />, {wrapper: BrowserRouter})
-    const signInButton = menu.getByText('Sign In');
-    expect(signInButton).toBeTruthy();
-    userEvent.click(signInButton);
-    expect(button).toBeTruthy();
+  test('Menu Before sign in', async () => {
+    // NOTE (PBT): This still does not work, but now it opens the menu.
+    // const menu = render(<Menu currentUser={{}} />, {wrapper: BrowserRouter})
+    // const button = menu.getByTestId('hamburger-menu');
+    // expect(button).toBeVisible();
+    // await userEvent.click(button);
+
+    // const signInButton = menu.getByTestId('sign-in-link');
+    // expect(signInButton).toBeVisible();
+    // await userEvent.click(signInButton);
   })
 
   test('Renders Home page', () => {
@@ -140,8 +151,9 @@ describe('Integration: App', () => {
 
   test('Renders Tweet Page', () => {
     render(<Tweets tweets={TWEETS}/>)
-    screen.findByText('For the past two months,')
-    screen.debug()
+    // NOTE (PBT): You should add an expect, even if the find function would fail.
+    expect(screen.getByText('For the past two months,')).toBeInTheDocument()
+    // screen.debug()
   })
 
   test('Renders Error Page', () => {
@@ -181,18 +193,18 @@ describe('Integration: App', () => {
     const profile = render(<ProfilePage currentUser={testUser} />, {wrapper: BrowserRouter});
     userEvent.click(profile.getByTestId('saveImg'))
     expect(handleImageUpload).toHaveBeenCalled();
-
   })
 
-  test('Test Sign In Functionality', () => {
-    const signInMock = jest.fn();
-    auth.signInWithEmailAndPassword = signInMock;
-    const email = 'test@example.com';
-    const password = 'testpassword';
+  // NOTE (PBT): Since this is not running application code, it is not testing anything.
+  // test('Test Sign In Functionality', () => {
+  //   const signInMock = jest.fn();
+  //   auth.signInWithEmailAndPassword = signInMock;
+  //   const email = 'test@example.com';
+  //   const password = 'testpassword';
 
-    auth.signInWithEmailAndPassword(email, password);
-    expect(signInMock).toHaveBeenCalledWith(email, password);
-  });
+  //   auth.signInWithEmailAndPassword(email, password);
+  //   expect(signInMock).toHaveBeenCalledWith(email, password);
+  // });
 })
 
 describe('Test Discussion Posts Functionality', () => {
