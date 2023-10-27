@@ -22,6 +22,7 @@ function Search(props) {
 }
 
 function RenderAllPost(props) {
+    console.log(' rendering posts', props.postList);
     const currentPost = props.postList;
     const postList = currentPost.map((singlePost) => {
         const { userId, userName, userImg, userRole, numPosts, totalPoints, timestamp, topic, post, likes, dislikes } = singlePost;
@@ -111,6 +112,7 @@ export default function DiscussionPage(props) {
                 theMessageObj.key = keyString;
                 return theMessageObj;
             })
+            console.log('onvalue', objArray)
             setDiscussionPosts(objArray);
         })
 
