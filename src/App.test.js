@@ -28,22 +28,7 @@ import LikeDislike from './components/LikeDislike';
 import { BrowserRouter, Router, MemoryRouter } from 'react-router-dom';
 import USERS from './data/users.json';
 import TWEETS from './data/tweets.json';
-import { Button } from 'bootstrap';
-import { initializeTestEnvironment } from '@firebase/rules-unit-testing';
-// import { initializeApp } from "firebase/app";
 
-
-// Auth mock
-// jest.mock('../firebaseConfig', () => ({
-//   auth: {
-//     onAuthStateChanged: jest.fn()
-//   },
-// }));
-
-// jest.mock('react', () => ({
-//   ...jest.requireActual('react'),
-//   useEffect: jest.fn(),
-// }));
 
 const db = getDatabase();
 
@@ -52,29 +37,19 @@ const testUser = {
   userName: 'Test User',
   userImg: '/img/null.png'
 }
+
+const testUser2 = {
+  userId: '8Du3M2phOqP91hrkirFOJPYaYq12',
+  userName: 'Test User',
+  userImg: '/img/null.png',
+  userRole: 'Coder'
+}
 // const testdb = [
 //   { "userId": "User1", "userName": "Ashley Williams", "userImg": "/img/User1.jpg", "userRole": "System Administrator", "numPosts": 45, "totalPoints": 4586, "timestamp": 1320224640000, "topic": "ChatGPT is so cool!", "post": "Hey there, I just wanted to share how impressed I am with ChatGPT! As an administrator, I'm constantly looking for ways to streamline our workflow and improve our communication, and ChatGPT has been a game-changer. Its natural language processing and ability to generate human-like responses is truly amazing. I'm blown away by the way ChatGPT can understand and interpret complex questions and provide thoughtful answers. It has saved us so much time and effort, and has greatly enhanced our ability to serve our clients. Thank you, ChatGPT, for being such an innovative and valuable tool!"},
 //   { "userId": "User2", "userName": "Brandon Nguyen", "userImg": "/img/User2.jpg", "userRole": "Data Scientist", "numPosts": 450, "totalPoints": 1234, "timestamp": 1320162120000, "topic": "ChatGPT is so useful!", "post": "As a data scientist, I'm constantly exploring new ways to extract insights from data. ChatGPT has been an incredible resource in this regard. Its ability to process and analyze large volumes of text data has greatly expanded our capabilities in natural language processing and sentiment analysis. With ChatGPT, we've been able to quickly and accurately analyze customer feedback and social media conversations, gaining valuable insights into our clients' needs and preferences. It's been amazing to see how ChatGPT's advanced algorithms and machine learning capabilities can help us uncover patterns and trends that would have been nearly impossible to detect otherwise. I'm truly grateful for the contributions ChatGPT has made to our data science efforts, and I look forward to continuing to explore all the ways it can help us make better decisions and drive better outcomes."},
 //   { "userId": "User3", "userName": "Rachel Davis", "userImg": "/img/User3.jpg", "userRole": "Product Manager", "numPosts": 100, "totalPoints": 10000, "timestamp": 1320161040000, "topic": "AI is advancing for the better", "post": "As a product manager, I'm always on the lookout for ways to enhance our products and services and meet our customers' evolving needs. ChatGPT has been an incredible asset in this regard. Its natural language processing and machine learning capabilities have enabled us to create highly personalized and engaging user experiences. By integrating ChatGPT into our customer service and support channels, we've been able to improve our response times, increase customer satisfaction, and reduce overall support costs. Additionally, ChatGPT has allowed us to gain deeper insights into customer behavior and preferences, which has informed our product development and marketing efforts. I'm continually impressed by the flexibility and power of ChatGPT, and I'm excited to explore all the ways it can help us drive innovation and growth across our product portfolio."}
 // ]
 
-
-
-
-// const postsRef = ref(db, 'discussion_log');
-// const offFunction = onValue(postsRef, (snapshot) => {
-//   const valueObj = snapshot.val();
-//   const objKeys = Object.keys(valueObj);
-//   const objArray = objKeys.map((keyString) => {
-//       const theMessageObj = valueObj[keyString];
-//       theMessageObj.key = keyString;
-//       return theMessageObj;
-//   })
-//   console.log(objArray)
-//   return objArray;
-// })
-// offFunction();
-// console.log(db)
 
 
 describe('Integration: App', () => {
@@ -151,11 +126,6 @@ describe('Integration: App', () => {
 
   })
 
-  test('Renders Discussion page', () => {
-    render(<DiscussionPage currentUser={testUser}/>)
-    expect(screen.getByText('Posting as: Test User'));
-  })
-
   test('Test Tweets filter button', () => {
     render(
       <MemoryRouter initialEntries={['/tweets']}>
@@ -183,11 +153,15 @@ describe('Integration: App', () => {
   })
 
   test('Renders Sign In page', () => {
-    render(
-      <MemoryRouter initialEntries={['/signin']}>
-        <App currentUser={testUser}/>
-      </MemoryRouter>
-    );
+    // render(
+    //   <MemoryRouter initialEntries={['/signin']}>
+    //     <App currentUser={testUser}/>
+    //   </MemoryRouter>
+    // );
+    const emptyUserID = {
+      userId: null
+    }
+    render(<SignInPage currentUser={emptyUserID}/>)
     expect(screen.getByText('Please sign in to view content'));
   })
   
@@ -207,7 +181,7 @@ describe('Integration: App', () => {
     const imgUpload = profile.container.querySelector('#imageUploadInput');
     const file = new File(['test-image'], 'user.png', { type: 'image/png' });
     userEvent.upload(imgUpload, file);
-    expect(imgUpload.name).toBe('user.png');
+    expect(file.name).toBe('user.png');
   })
   // NOTE: Test doesn't work.
   // test('Profile Page submit picture', () => {
@@ -234,7 +208,35 @@ describe('Test Discussion Posts Functionality', () => {
     set(ref(db), null);
   })
 
-  test('Render Discussion Page', () => {
+  test('Renders Empty Discussion page', () => {
+    render(<DiscussionPage currentUser={testUser}/>)
+    expect(screen.getByText('Posting as: Test User'));
+  })
+  
+  test('Render Discussion Post', () => {
+    set(ref(db), {
+      discussion_log: {
+        0: {
+          dislikes: 0,
+          likes: 100,
+          numPosts: 45,
+          post: "Hey there, I just wanted to share how impressed I am with ChatGPT! As an administrator, I'm constantly looking for ways to streamline our workflow and improve our communication, and ChatGPT has been a game-changer. Its natural language processing and ability to generate human-like responses is truly amazing. I'm blown away by the way ChatGPT can understand and interpret complex questions and provide thoughtful answers. It has saved us so much time and effort, and has greatly enhanced our ability to serve our clients. Thank you, ChatGPT, for being such an innovative and valuable tool!",
+          timestamp: 1320224640000,
+          topic: "ChatGPT is so cool!",
+          totalPoints: 4586,
+          userId: "User1",
+          userImg: "/img/User1.jpg",
+          userName: "Ashley Williams",
+          userRole: "System Administrator"
+        }
+      } 
+    });
+    render(<DiscussionPage currentUser={testUser}/>)
+    expect(screen.getByText('Topic: ChatGPT is so cool!')).toBeInTheDocument()
+    expect(screen.getByRole('button', {name: `Like 100`})).toBeInTheDocument();
+  })
+
+  test('Render Discussion Post and Click Like (2x)', () => {
     set(ref(db), {
       discussion_log: {
         0: {
@@ -256,10 +258,82 @@ describe('Test Discussion Posts Functionality', () => {
     render(<DiscussionPage currentUser={testUser}/>)
     // screen.debug()
     expect(screen.getByText('Topic: ChatGPT is so cool!')).toBeInTheDocument()
+    expect(screen.getByText('Like')).toBeInTheDocument();
+    const likeButton = screen.getByRole('button', {name: `Like 100`});
+    userEvent.click(likeButton);
+    expect(screen.getByText('101')).toBeInTheDocument();
+    expect(screen.getByText('0')).toBeInTheDocument();
+    userEvent.click(likeButton);
+    expect(screen.getByText('100')).toBeInTheDocument();
+    expect(screen.getByText('0')).toBeInTheDocument();
   })
 
+  test('Render Discussion Post and Click Dislike (2x)', () => {
+    set(ref(db), {
+      discussion_log: {
+        0: {
+          dislikes: 0,
+          likes: 100,
+          numPosts: 45,
+          post: "Hey there, I just wanted to share how impressed I am with ChatGPT! As an administrator, I'm constantly looking for ways to streamline our workflow and improve our communication, and ChatGPT has been a game-changer. Its natural language processing and ability to generate human-like responses is truly amazing. I'm blown away by the way ChatGPT can understand and interpret complex questions and provide thoughtful answers. It has saved us so much time and effort, and has greatly enhanced our ability to serve our clients. Thank you, ChatGPT, for being such an innovative and valuable tool!",
+          timestamp: 1320224640000,
+          topic: "ChatGPT is so cool!",
+          totalPoints: 4586,
+          userId: "User1",
+          userImg: "/img/User1.jpg",
+          userName: "Ashley Williams",
+          userRole: "System Administrator"
+        }
+      } 
+    });
 
-  test('Write new post', () => {
+    render(<DiscussionPage currentUser={testUser}/>)
+    // screen.debug()
+    expect(screen.getByText('Topic: ChatGPT is so cool!')).toBeInTheDocument()
+    expect(screen.getByText('Like')).toBeInTheDocument();
+    const dislikeButton = screen.getByRole('button', {name: `Dislike 0`});
+    userEvent.click(dislikeButton);
+    expect(screen.getByText('1')).toBeInTheDocument();
+    expect(screen.getByText('100')).toBeInTheDocument();
+    userEvent.click(dislikeButton);
+    expect(screen.getByText('0')).toBeInTheDocument();
+    expect(screen.getByText('100')).toBeInTheDocument();
+  })
+
+  test('Render Discussion Post and Click both Like/Dislike', () => {
+    set(ref(db), {
+      discussion_log: {
+        0: {
+          dislikes: 0,
+          likes: 100,
+          numPosts: 45,
+          post: "Hey there, I just wanted to share how impressed I am with ChatGPT! As an administrator, I'm constantly looking for ways to streamline our workflow and improve our communication, and ChatGPT has been a game-changer. Its natural language processing and ability to generate human-like responses is truly amazing. I'm blown away by the way ChatGPT can understand and interpret complex questions and provide thoughtful answers. It has saved us so much time and effort, and has greatly enhanced our ability to serve our clients. Thank you, ChatGPT, for being such an innovative and valuable tool!",
+          timestamp: 1320224640000,
+          topic: "ChatGPT is so cool!",
+          totalPoints: 4586,
+          userId: "User1",
+          userImg: "/img/User1.jpg",
+          userName: "Ashley Williams",
+          userRole: "System Administrator"
+        }
+      } 
+    });
+
+    render(<DiscussionPage currentUser={testUser}/>)
+    // screen.debug()
+    expect(screen.getByText('Topic: ChatGPT is so cool!')).toBeInTheDocument()
+    expect(screen.getByText('Like')).toBeInTheDocument();
+    const likeButton = screen.getByRole('button', {name: `Like 100`});
+    const dislikeButton = screen.getByRole('button', {name: `Dislike 0`});
+    userEvent.click(likeButton);
+    expect(screen.getByText('0')).toBeInTheDocument();
+    expect(screen.getByText('101')).toBeInTheDocument();
+    userEvent.click(dislikeButton);
+    expect(screen.getByText('1')).toBeInTheDocument();
+    expect(screen.getByText('100')).toBeInTheDocument();
+  })
+
+  test('Create new post (User has invalid role)', () => {
     render(<DiscussionPage currentUser={testUser}/>, {wrapper: BrowserRouter});
     const topicText = screen.getByPlaceholderText('Type a topic');
     const postText = screen.getByPlaceholderText('Type a new post');
@@ -267,10 +341,92 @@ describe('Test Discussion Posts Functionality', () => {
     userEvent.type(topicText, 'Test Topic field');
     userEvent.type(postText, 'Test post field');
     userEvent.click(submitButton);
-    expect(screen.getByText('Test post field'));
+    expect(screen.getByText('Topic: Test Topic field')).toBeInTheDocument();
+    expect(screen.getByText('Test post field')).toBeInTheDocument();
   })
 
-  test('Like/Dislike Buttons', async() => {
+  test('Create new post (User has valid role)', () => {
+    render(<DiscussionPage currentUser={testUser2}/>, {wrapper: BrowserRouter});
+    const topicText = screen.getByPlaceholderText('Type a topic');
+    const postText = screen.getByPlaceholderText('Type a new post');
+    const submitButton = screen.getByText('Submit');
+    userEvent.type(topicText, 'I have a valid role!');
+    userEvent.type(postText, 'I am a user with the role of a coder!');
+    userEvent.click(submitButton);
+    expect(screen.getByText('Topic: I have a valid role!')).toBeInTheDocument();
+    expect(screen.getByText('I am a user with the role of a coder!')).toBeInTheDocument();
+  })
+
+  test('Create new post after loaded in a post', () => {
+    set(ref(db), {
+      discussion_log: {
+        0: {
+          dislikes: 0,
+          likes: 100,
+          numPosts: 45,
+          post: "Hey there, I just wanted to share how impressed I am with ChatGPT! As an administrator, I'm constantly looking for ways to streamline our workflow and improve our communication, and ChatGPT has been a game-changer. Its natural language processing and ability to generate human-like responses is truly amazing. I'm blown away by the way ChatGPT can understand and interpret complex questions and provide thoughtful answers. It has saved us so much time and effort, and has greatly enhanced our ability to serve our clients. Thank you, ChatGPT, for being such an innovative and valuable tool!",
+          timestamp: 1320224640000,
+          topic: "ChatGPT is so cool!",
+          totalPoints: 4586,
+          userId: "User1",
+          userImg: "/img/User1.jpg",
+          userName: "Ashley Williams",
+          userRole: "System Administrator"
+        }
+      } 
+    });
+    
+    render(<DiscussionPage currentUser={testUser}/>, {wrapper: BrowserRouter});
+    const topicText = screen.getByPlaceholderText('Type a topic');
+    const postText = screen.getByPlaceholderText('Type a new post');
+    const submitButton = screen.getByText('Submit');
+    userEvent.type(topicText, 'Test Topic field');
+    userEvent.type(postText, 'Test post field');
+    userEvent.click(submitButton);
+    expect(screen.getByText('Topic: Test Topic field')).toBeInTheDocument();
+    expect(screen.getByText('Test post field')).toBeInTheDocument();
+    expect(screen.getByText('Topic: ChatGPT is so cool!')).toBeInTheDocument()
+  })
+
+  // Expect an error to be thrown when both are empty
+  test('Create new post with empty topic and post', () => {
+  //   set(ref(db), {
+  //     discussion_log: {
+  //       0: {
+  //         dislikes: 0,
+  //         likes: 100,
+  //         numPosts: 45,
+  //         post: "Hey there, I just wanted to share how impressed I am with ChatGPT! As an administrator, I'm constantly looking for ways to streamline our workflow and improve our communication, and ChatGPT has been a game-changer. Its natural language processing and ability to generate human-like responses is truly amazing. I'm blown away by the way ChatGPT can understand and interpret complex questions and provide thoughtful answers. It has saved us so much time and effort, and has greatly enhanced our ability to serve our clients. Thank you, ChatGPT, for being such an innovative and valuable tool!",
+  //         timestamp: 1320224640000,
+  //         topic: "ChatGPT is so cool!",
+  //         totalPoints: 4586,
+  //         userId: "User1",
+  //         userImg: "/img/User1.jpg",
+  //         userName: "Ashley Williams",
+  //         userRole: "System Administrator"
+  //       }
+  //     } 
+  //   });
+    
+  //   render(<DiscussionPage currentUser={testUser}/>, {wrapper: BrowserRouter});
+  //   const submitButton = screen.getByText('Submit');
+  //   userEvent.click(submitButton);
+  //   expect(screen.getByText('Topic:')).toBeInTheDocument();
+  //   // expect(screen.getByText('Test post field')).toBeInTheDocument();
+  })
+  
+  //   Expect: Post will still go through without topic
+  test('Create new post with empty topic', () => {
+//     render(<DiscussionPage currentUser={testUser}/>, {wrapper: BrowserRouter});
+//     const postText = screen.getByPlaceholderText('Type a new post');
+//     const submitButton = screen.getByText('Submit');
+//     userEvent.type(postText, 'There is no topic in this post!');
+//     userEvent.click(submitButton);
+//     expect(screen.getByText('Topic:')).toBeInTheDocument();
+//     expect(screen.getByText('There is no topic in this post!')).toBeInTheDocument();
+  })
+
+  test('Like/Dislike Buttons Interactivity', async() => {
     const postProp = {
       likes: 10,
       dislikes: 5

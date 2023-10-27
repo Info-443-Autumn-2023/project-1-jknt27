@@ -21,6 +21,11 @@ if (window.location.hostname === "localhost") {
   connectDatabaseEmulator(db, "127.0.0.1", 9000);
 }
 
+import { getAuth, connectAuthEmulator } from "firebase/auth";
+
+const auth = getAuth();
+connectAuthEmulator(auth, "http://127.0.0.1:9099");
+
 // Get a reference to the database service
 // const db = getDatabase(app);
 // if (window.location.hostname === "127.0.0.1") {
