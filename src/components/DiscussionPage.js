@@ -134,12 +134,13 @@ export default function DiscussionPage(props) {
             "likes": 0,
             "dislikes": 0
         }
-
-        const db = getDatabase();
-        const discussions = ref(db, 'discussion_log');
-        const updateDiscussion = [...discussionPosts, newPost];
-        setDiscussionPosts(updateDiscussion);
-        firebasePush(discussions, newPost);
+        if (newPost.post !== undefined && newPost.topic !== undefined) {
+            const db = getDatabase();
+            const discussions = ref(db, 'discussion_log');
+            const updateDiscussion = [...discussionPosts, newPost];
+            setDiscussionPosts(updateDiscussion);
+            firebasePush(discussions, newPost);
+        }
     }
 
     const handleLikePost = (post) => {

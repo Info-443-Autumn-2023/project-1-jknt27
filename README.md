@@ -19,8 +19,8 @@ I would analyze the architectural quality of the discussion posts page write uni
 
 ## Checkpoint 3: Testing
 
-I am currently working on debugging the Firebase Emulator Suite, which is necessary for testing the database component of my application. Here is the current test coverage report.
+I am writing automated tests for my DiscussionPage component. Here is the current test coverage report.
 
 ![Checkpoint 3 Test Coverage](./images/CurrentTestCoverage.png)
 
-To execute my tests, please run `npm test App.test.js -- --coverage --collectCoverageFrom='src/components/*.js'`.
+To execute my tests, please run in terminal `npm test -- --coverage`.

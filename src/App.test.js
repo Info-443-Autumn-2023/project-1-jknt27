@@ -1,14 +1,6 @@
-// import { getDatabase, connectDatabaseEmulator, child, ref, onValue } from "firebase/database";
-// import { initializeTestApp } from '@firebase/rules-unit-testing';
-// import * as admin from 'firebase-admin';
-
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-// import { getByText, waitFor } from '@testing-library/react';
-
-import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { getAuth, signOut } from 'firebase/auth'
-import MockDatabase from './setupTests';
 import { getDatabase, ref, set } from "firebase/database";
 
 import App from './components/App';
@@ -28,6 +20,7 @@ import LikeDislike from './components/LikeDislike';
 import { BrowserRouter, Router, MemoryRouter } from 'react-router-dom';
 import USERS from './data/users.json';
 import TWEETS from './data/tweets.json';
+import FBDATA from './data/firebase_data.json'
 
 
 const db = getDatabase();
@@ -44,11 +37,6 @@ const testUser2 = {
   userImg: '/img/null.png',
   userRole: 'Coder'
 }
-// const testdb = [
-//   { "userId": "User1", "userName": "Ashley Williams", "userImg": "/img/User1.jpg", "userRole": "System Administrator", "numPosts": 45, "totalPoints": 4586, "timestamp": 1320224640000, "topic": "ChatGPT is so cool!", "post": "Hey there, I just wanted to share how impressed I am with ChatGPT! As an administrator, I'm constantly looking for ways to streamline our workflow and improve our communication, and ChatGPT has been a game-changer. Its natural language processing and ability to generate human-like responses is truly amazing. I'm blown away by the way ChatGPT can understand and interpret complex questions and provide thoughtful answers. It has saved us so much time and effort, and has greatly enhanced our ability to serve our clients. Thank you, ChatGPT, for being such an innovative and valuable tool!"},
-//   { "userId": "User2", "userName": "Brandon Nguyen", "userImg": "/img/User2.jpg", "userRole": "Data Scientist", "numPosts": 450, "totalPoints": 1234, "timestamp": 1320162120000, "topic": "ChatGPT is so useful!", "post": "As a data scientist, I'm constantly exploring new ways to extract insights from data. ChatGPT has been an incredible resource in this regard. Its ability to process and analyze large volumes of text data has greatly expanded our capabilities in natural language processing and sentiment analysis. With ChatGPT, we've been able to quickly and accurately analyze customer feedback and social media conversations, gaining valuable insights into our clients' needs and preferences. It's been amazing to see how ChatGPT's advanced algorithms and machine learning capabilities can help us uncover patterns and trends that would have been nearly impossible to detect otherwise. I'm truly grateful for the contributions ChatGPT has made to our data science efforts, and I look forward to continuing to explore all the ways it can help us make better decisions and drive better outcomes."},
-//   { "userId": "User3", "userName": "Rachel Davis", "userImg": "/img/User3.jpg", "userRole": "Product Manager", "numPosts": 100, "totalPoints": 10000, "timestamp": 1320161040000, "topic": "AI is advancing for the better", "post": "As a product manager, I'm always on the lookout for ways to enhance our products and services and meet our customers' evolving needs. ChatGPT has been an incredible asset in this regard. Its natural language processing and machine learning capabilities have enabled us to create highly personalized and engaging user experiences. By integrating ChatGPT into our customer service and support channels, we've been able to improve our response times, increase customer satisfaction, and reduce overall support costs. Additionally, ChatGPT has allowed us to gain deeper insights into customer behavior and preferences, which has informed our product development and marketing efforts. I'm continually impressed by the flexibility and power of ChatGPT, and I'm excited to explore all the ways it can help us drive innovation and growth across our product portfolio."}
-// ]
 
 
 
@@ -61,10 +49,13 @@ describe('Integration: App', () => {
     window.URL.createObjectURL.mockReset();
   });
 
-
-  test('Renders Header/Footer', () => {
-    render(<App />, {wrapper: BrowserRouter});
+  test('Render Header', () => {
+    render(<Header/>)
     expect(screen.getByText('ChatGPT: A Brief Rendition'));
+  })
+
+  test('Render Footer', () => {
+    render(<Footer />);
     expect(screen.getByText('email@chatgpt.uw.edu'));
   })
 
@@ -88,7 +79,7 @@ describe('Integration: App', () => {
     expect(screen.getByText('Tweets'))
     expect(screen.getByText('Profile'))
     expect(screen.getByText('Sign Out'))
-    // screen.debug()
+
     userEvent.click(screen.getByText('Sign Out'))
   })
 
@@ -101,14 +92,14 @@ describe('Integration: App', () => {
 
   test('Menu Before sign in', async () => {
     // NOTE (PBT): This still does not work, but now it opens the menu.
-    // const menu = render(<Menu currentUser={{}} />, {wrapper: BrowserRouter})
-    // const button = menu.getByTestId('hamburger-menu');
-    // expect(button).toBeVisible();
-    // await userEvent.click(button);
+    const menu = render(<Menu currentUser={{}} />, {wrapper: BrowserRouter})
+    const button = menu.getByTestId('hamburger-menu');
+    expect(button).toBeVisible();
+    userEvent.click(button);
 
-    // const signInButton = menu.getByTestId('sign-in-link');
-    // expect(signInButton).toBeVisible();
-    // await userEvent.click(signInButton);
+    const signInButton = menu.getByTestId('sign-in-link');
+    expect(signInButton).toBeVisible();
+    userEvent.click(signInButton);
   })
 
   test('Renders Home page', () => {
@@ -126,46 +117,28 @@ describe('Integration: App', () => {
 
   })
 
-  test('Test Tweets filter button', () => {
-    render(
-      <MemoryRouter initialEntries={['/tweets']}>
-        <App />
-      </MemoryRouter>
-    );
-    const filterButton = screen.getByText('Filter Date: Descending');
-    expect(filterButton);
-    userEvent.click(filterButton);
-    expect(screen.getByText('Filter Date: Ascending'));
-    userEvent.click(filterButton);
-    expect(screen.getByText('Filter Date: Descending'));
-  })
-
-  test('Renders Tweet Page', () => {
-    render(<Tweets tweets={TWEETS}/>)
-    // NOTE (PBT): You should add an expect, even if the find function would fail.
-    expect(screen.getByText('For the past two months,')).toBeInTheDocument()
-    // screen.debug()
-  })
+  
 
   test('Renders Error Page', () => {
     render(<ErrorPage />, {wrapper: BrowserRouter})
     expect(screen.getByText('Hm... Seems like the page was not found'))
   })
 
+  // NOTE: This still does not work due to firebase mock authentication problems.
   test('Renders Sign In page', () => {
     // render(
-    //   <MemoryRouter initialEntries={['/signin']}>
-    //     <App currentUser={testUser}/>
-    //   </MemoryRouter>
-    // );
-    const emptyUserID = {
-      userId: null
-    }
-    render(<SignInPage currentUser={emptyUserID}/>)
+      //   <MemoryRouter initialEntries={['/signin']}>
+      //     <App currentUser={emptyUserID}/>
+      //   </MemoryRouter>
+      // );
+
+    const loginUser = jest.fn()
+    const emptyUserID = { "userId": null, "userName": "Annonymous", "userImg": "/img/null.png", "userRole": null, "numPosts": null, "totalPoints": null}
+    render(<SignInPage currentUser={emptyUserID} loginCallback={loginUser}/>)
     expect(screen.getByText('Please sign in to view content'));
   })
   
-  //crashes here
+  // NOTE: Testing for page redirection crashes tests.
   // test('New Render Sign in Page', () => {
   //   render(<SignInPage currentUser={testUser} />, {wrapper: BrowserRouter})
   //   expect(screen.getByText('Topic: ChatGPT is so cool!'));
@@ -176,12 +149,15 @@ describe('Integration: App', () => {
     expect(screen.getByText('Personal Information'));
   })
 
+  //Note: website's fileupload does not work
   test('Profile Page upload picture', () => {
     const profile = render(<ProfilePage currentUser={testUser} />, {wrapper: BrowserRouter});
     const imgUpload = profile.container.querySelector('#imageUploadInput');
+    const image = screen.getAllByAltText('Test User avatar')
     const file = new File(['test-image'], 'user.png', { type: 'image/png' });
     userEvent.upload(imgUpload, file);
     expect(file.name).toBe('user.png');
+    // expect(image.getAttribute('src')).not.toBeNull();
   })
   // NOTE: Test doesn't work.
   // test('Profile Page submit picture', () => {
@@ -256,7 +232,6 @@ describe('Test Discussion Posts Functionality', () => {
     });
 
     render(<DiscussionPage currentUser={testUser}/>)
-    // screen.debug()
     expect(screen.getByText('Topic: ChatGPT is so cool!')).toBeInTheDocument()
     expect(screen.getByText('Like')).toBeInTheDocument();
     const likeButton = screen.getByRole('button', {name: `Like 100`});
@@ -288,7 +263,6 @@ describe('Test Discussion Posts Functionality', () => {
     });
 
     render(<DiscussionPage currentUser={testUser}/>)
-    // screen.debug()
     expect(screen.getByText('Topic: ChatGPT is so cool!')).toBeInTheDocument()
     expect(screen.getByText('Like')).toBeInTheDocument();
     const dislikeButton = screen.getByRole('button', {name: `Dislike 0`});
@@ -320,7 +294,6 @@ describe('Test Discussion Posts Functionality', () => {
     });
 
     render(<DiscussionPage currentUser={testUser}/>)
-    // screen.debug()
     expect(screen.getByText('Topic: ChatGPT is so cool!')).toBeInTheDocument()
     expect(screen.getByText('Like')).toBeInTheDocument();
     const likeButton = screen.getByRole('button', {name: `Like 100`});
@@ -360,7 +333,7 @@ describe('Test Discussion Posts Functionality', () => {
   test('Create new post after loaded in a post', () => {
     set(ref(db), {
       discussion_log: {
-        0: {
+        "one": {
           dislikes: 0,
           likes: 100,
           numPosts: 45,
@@ -390,40 +363,66 @@ describe('Test Discussion Posts Functionality', () => {
 
   // Expect an error to be thrown when both are empty
   test('Create new post with empty topic and post', () => {
-  //   set(ref(db), {
-  //     discussion_log: {
-  //       0: {
-  //         dislikes: 0,
-  //         likes: 100,
-  //         numPosts: 45,
-  //         post: "Hey there, I just wanted to share how impressed I am with ChatGPT! As an administrator, I'm constantly looking for ways to streamline our workflow and improve our communication, and ChatGPT has been a game-changer. Its natural language processing and ability to generate human-like responses is truly amazing. I'm blown away by the way ChatGPT can understand and interpret complex questions and provide thoughtful answers. It has saved us so much time and effort, and has greatly enhanced our ability to serve our clients. Thank you, ChatGPT, for being such an innovative and valuable tool!",
-  //         timestamp: 1320224640000,
-  //         topic: "ChatGPT is so cool!",
-  //         totalPoints: 4586,
-  //         userId: "User1",
-  //         userImg: "/img/User1.jpg",
-  //         userName: "Ashley Williams",
-  //         userRole: "System Administrator"
-  //       }
-  //     } 
-  //   });
-    
-  //   render(<DiscussionPage currentUser={testUser}/>, {wrapper: BrowserRouter});
-  //   const submitButton = screen.getByText('Submit');
-  //   userEvent.click(submitButton);
-  //   expect(screen.getByText('Topic:')).toBeInTheDocument();
-  //   // expect(screen.getByText('Test post field')).toBeInTheDocument();
+    render(<DiscussionPage currentUser={testUser}/>, {wrapper: BrowserRouter});
+    const submitButton = screen.getByText('Submit');
+    userEvent.click(submitButton);
+    expect(screen.queryByText('Topic:')).toBeNull();
   })
   
   //   Expect: Post will still go through without topic
-  test('Create new post with empty topic', () => {
-//     render(<DiscussionPage currentUser={testUser}/>, {wrapper: BrowserRouter});
-//     const postText = screen.getByPlaceholderText('Type a new post');
-//     const submitButton = screen.getByText('Submit');
-//     userEvent.type(postText, 'There is no topic in this post!');
-//     userEvent.click(submitButton);
-//     expect(screen.getByText('Topic:')).toBeInTheDocument();
-//     expect(screen.getByText('There is no topic in this post!')).toBeInTheDocument();
+  test('Create new post with empty topic', () => {    
+    render(<DiscussionPage currentUser={testUser}/>, {wrapper: BrowserRouter});
+    const postText = screen.getByPlaceholderText('Type a new post');
+    const submitButton = screen.getByText('Submit');
+    userEvent.type(postText, 'There is no topic in this post!');
+    userEvent.click(submitButton);
+    expect(screen.queryByText('There is no topic in this post!')).toBeNull();
+  })
+
+  test('Create new post with empty post', () => {    
+    render(<DiscussionPage currentUser={testUser}/>, {wrapper: BrowserRouter});
+    const topicText = screen.getByPlaceholderText('Type a topic');
+    const submitButton = screen.getByText('Submit');
+    userEvent.type(topicText, 'This is an empty post!');
+    userEvent.click(submitButton);
+    expect(screen.queryByText('This is an empty post!')).toBeNull();
+  })
+
+  test('Create new post (100 words)', () => {
+    render(<DiscussionPage currentUser={testUser}/>, {wrapper: BrowserRouter});
+    const topicText = screen.getByPlaceholderText('Type a topic');
+    const postText = screen.getByPlaceholderText('Type a new post');
+    const submitButton = screen.getByText('Submit');
+    const post = 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a,'
+    userEvent.type(topicText, 'Test Topic field');
+    userEvent.type(postText, post);
+    userEvent.click(submitButton);
+    expect(screen.getByText('Topic: Test Topic field')).toBeInTheDocument();
+    expect(screen.getByText(post)).toBeInTheDocument();
+  })
+
+  test('Create new post (2000 characters)', () => {
+    render(<DiscussionPage currentUser={testUser}/>, {wrapper: BrowserRouter});
+    const topicText = screen.getByPlaceholderText('Type a topic');
+    const postText = screen.getByPlaceholderText('Type a new post');
+    const submitButton = screen.getByText('Submit');
+    const longPost = 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu. Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestib';
+    userEvent.type(topicText, 'Test Topic field');
+    userEvent.type(postText, longPost);
+    userEvent.click(submitButton);
+    expect(screen.getByText('Topic: Test Topic field')).toBeInTheDocument();
+    expect(screen.getByText(longPost)).toBeInTheDocument();
+  })
+
+  test('Render Discussion posts from JSON', () => {
+    set(ref(db), {discussion_log: FBDATA.discussion_log})
+    render(<DiscussionPage currentUser={testUser}/>, {wrapper: BrowserRouter});
+    expect(screen.getByText('Topic: ChatGPT is so cool!')).toBeInTheDocument();
+    expect(screen.getByText('Topic: ChatGPT is so useful!')).toBeInTheDocument();
+    expect(screen.getByText('Topic: AI is advancing for the better')).toBeInTheDocument();
+    expect(screen.getByText('Topic: ChatGPT IS AWESOME!')).toBeInTheDocument();
+    expect(screen.getByText('Topic: SO cool')).toBeInTheDocument();
+    expect(screen.getByText('Topic: PRO/CONS of ChatGPT')).toBeInTheDocument();
   })
 
   test('Like/Dislike Buttons Interactivity', async() => {
@@ -466,9 +465,28 @@ describe('Test Discussion Posts Functionality', () => {
 })
 
 describe('Testing Tweets Page', () => {
-  // test('Render all Tweets', () => {
-  //   const setTweets = jest.fn();
-  //   const setDescending = jest.fn();
-  //   <Tweets tweets={db.tweets} setTweets={setTweets} setDescending={setDescending} />
-  // })
+  beforeEach(() => {
+    set(ref(db), null);
+  })
+  
+  test('Test Tweets filter button', () => {
+    render(<Tweets/>)
+    const filterButton = screen.getByText('Filter Date: Descending');
+    expect(filterButton);
+    userEvent.click(filterButton);
+    expect(screen.getByText('Filter Date: Ascending'));
+    userEvent.click(filterButton);
+    expect(screen.getByText('Filter Date: Descending'));
+  })
+
+  // Note: Tests only shows Tweet containers and does not render the Tweets.
+  test('Renders Tweet Page', async () => {
+    set(ref(db), {tweets: TWEETS});
+    render(<Tweets/>, {wrapper: BrowserRouter})
+    // // NOTE (PBT): You should add an expect, even if the find function would fail.
+    expect(screen.getByText('Here are five tips that can help you make the best use of #ChatGPT.')).toBeInTheDocument()
+    // await waitFor(() => {
+    //   expect(screen.getByText('Here are five tips that can help you make the best use of #ChatGPT.')).toBeInTheDocument()
+    // })
+  })
 })
