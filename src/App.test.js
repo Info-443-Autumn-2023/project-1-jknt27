@@ -2,6 +2,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 import { getDatabase, ref, set } from "firebase/database";
+import { BrowserRouter, Router, MemoryRouter } from 'react-router-dom';
 
 import App from './components/App';
 import Menu from './components/Menu';
@@ -16,8 +17,6 @@ import ProfilePage from './components/ProfilePage';
 import ErrorPage from './components/ErrorPage';
 import LikeDislike from './components/LikeDislike';
 
-// import { auth, firebaseConfig, database } from '../firebaseConfig'
-import { BrowserRouter, Router, MemoryRouter } from 'react-router-dom';
 import USERS from './data/users.json';
 import TWEETS from './data/tweets.json';
 import FBDATA from './data/firebase_data.json'
