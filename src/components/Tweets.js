@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { getDatabase, ref, onValue } from 'firebase/database';
-import { Outlet } from 'react-router-dom';
 import { TwitterTweetEmbed } from 'react-twitter-embed';
 
 function LoadTweets(props) {

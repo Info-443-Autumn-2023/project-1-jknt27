@@ -13,13 +13,11 @@ import SignInPage from './SignInPage';
 import ProfilePage from './ProfilePage';
 import ErrorPage from './ErrorPage';
 
-// OTHER IMPORTS HERE
 import USERS from '../data/users.json';
 import TWEETS from '../data/tweets.json';
 
 export default function App(props) {
-  //state variables
-  const [currentUser, setCurrentUser] = useState(USERS[0]);  //initialize as null user
+  const [currentUser, setCurrentUser] = useState(USERS[0]);
   const [tweets, setTweets] = useState(TWEETS);
   const navigateTo = useNavigate();
 
@@ -52,15 +50,13 @@ export default function App(props) {
       <Menu currentUser={currentUser} />
       <Header />
       <Routes>
-        {/* Automatically sends to home page */}
         <Route path='' element={<Navigate to='/home' />} />
         <Route path='/home' element={<HomePage />} />
         <Route path='/about' element={<About />} />
         <Route path='/tweets' element={<Tweets tweets={tweets} />}/>
         <Route path='/signin' element={<SignInPage currentUser={currentUser} loginCallback={loginUser} />} />
         <Route path='*' element={<ErrorPage />} />
-        {/* Protected */}
-        <Route element={<ProtectedPage currentUser={currentUser} />}>
+        <Route element={<ProtectedPages currentUser={currentUser} />}>
           <Route path='/discussion' element={<DiscussionPage currentUser={currentUser} />} />
           <Route path="/profile" element={<ProfilePage currentUser={currentUser} />} />
         </Route>
@@ -70,7 +66,7 @@ export default function App(props) {
   );
 }
 
-function ProtectedPage(props) {
+function ProtectedPages(props) {
   if (props.currentUser.userId === null) {
     return <Navigate to='/signin' />
   }

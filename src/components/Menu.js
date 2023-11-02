@@ -84,11 +84,8 @@ export default function Menu(props) {
                             </NavLink>
                         </li>
                     }
-
                 </ul>
             </div>
-
-            { }
         </nav>
     )
 }
